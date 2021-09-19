@@ -1,7 +1,7 @@
 '''
     File Name:  bookshelf.py
     Author:     Akshay Rao
-    Date:       September 18, 2021
+    Date:       September 19, 2021
     Modified:   None
     Copyright Akshay Rao, 2021
 '''
@@ -25,12 +25,13 @@ def main():
 
     option = '0'
 
-    while (option != '4'):
+    while (option != '5'):
         print("\n")
         print("1 - Add book\n")
         print("2 - Update book status\n")
         print("3 - List all books\n")
-        print("4 - Exit program\n\n")
+        print("4 - Remove book\n")
+        print("5 - Exit program\n\n")
 
         option = input("What do? ")
         print("\n************************************************************************************")
@@ -42,6 +43,8 @@ def main():
         elif option == '3':
             listBooks()
         elif option == '4':
+            removeBook()
+        elif option == '5':
             break
         else:
             print("Invalid option. Select again.\n")
@@ -102,17 +105,39 @@ def updateBookShelf():
 
     myRow = []
     myData = []
-    line = 0
+    flag = 0
     
     with open(filename) as file:
         data = csv.reader(file)
         for row in data:
-            myData.append(row)
             if row[0] == title:
                 myRow = row
                 myRow[2] = status
+                myData.append(myRow)
+                flag = 1
                 break
-            line = line + 1
+            if flag == 0:
+                myData.append(row)
+
+    with open(filename, 'w') as file:
+        data = csv.writer(file)
+        data.writerows(myData)
+
+def removeBook():
+    '''
+        Collect and store book title from user. Find and remove book from
+        csv file.        
+    '''
+
+    title = input("Book Title: ")
+    myData = []
+    
+    with open(filename) as file:
+        data = csv.reader(file)
+        for row in data:
+            if row[0] == title:
+                break
+            myData.append(row)
 
     with open(filename, 'w') as file:
         data = csv.writer(file)
