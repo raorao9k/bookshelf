@@ -1,7 +1,7 @@
 '''
     File Name:  bookshelf.py
     Author:     Akshay Rao
-    Date:       September 19, 2021
+    Date:       September 20, 2021
     Modified:   None
     Copyright Akshay Rao, 2021
 '''
@@ -135,9 +135,9 @@ def removeBook():
     with open(filename) as file:
         data = csv.reader(file)
         for row in data:
-            if row[0] == title:
-                break
             myData.append(row)
+            if row[0] == title:
+                myData.pop()
 
     with open(filename, 'w') as file:
         data = csv.writer(file)
