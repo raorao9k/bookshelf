@@ -1,7 +1,7 @@
 '''
     File Name:  bookshelf.py
     Author:     Akshay Rao
-    Date:       September 20, 2021
+    Date:       September 22, 2021
     Modified:   None
     Copyright Akshay Rao, 2021
 '''
@@ -20,18 +20,21 @@ def main():
     'createFile()'
 
     print("\n************************************************************************************")
-    print("**** Akshay's Bookshelf ************************************************************")
+    print("* Akshay's Bookshelf ***************************************************************")
     print("************************************************************************************")
 
     option = '0'
 
-    while (option != '5'):
+    while (option != '8'):
         print("\n")
         print("1 - Add book\n")
-        print("2 - Update book status\n")
-        print("3 - List all books\n")
-        print("4 - Remove book\n")
-        print("5 - Exit program\n\n")
+        print("2 - Remove book\n")
+        print("3 - Find book\n")
+        print("4 - Find author\n")
+        print("5 - Find status\n")
+        print("6 - Update status\n")
+        print("7 - List all books\n")
+        print("8 - Exit program\n\n")
 
         option = input("What do? ")
         print("\n************************************************************************************")
@@ -39,16 +42,23 @@ def main():
         if option == '1':
             addBook()
         elif option == '2':
-            updateBookShelf()
-        elif option == '3':
-            listBooks()
-        elif option == '4':
             removeBook()
+        elif option == '3':
+            findBy(0)
+        elif option == '4':
+            findBy(1)
         elif option == '5':
+            findBy(2)
+        elif option == '6':
+            newStatus()
+        elif option == '7':
+            listAllBooks()
+        elif option == '8':
             break
         else:
             print("Invalid option. Select again.\n")
 
+        print("************************************************************************************")
 
 def createFile():
     ''' 
@@ -76,23 +86,56 @@ def addBook():
         writer = csv.writer(file)
         writer.writerow([title,author,status])
 
-def listBooks():
+def removeBook():
     '''
-        Read all books from csv file and print to terminal row by row
-        with formatting.
+        Collect and store book title from user. Find and remove book from
+        csv file.        
     '''
+
+    title = input("Book Title: ")
+    myData = []
+    
+    with open(filename) as file:
+        data = csv.reader(file)
+        for row in data:
+            myData.append(row)
+            if row[0] == title:
+                myData.pop()
+
+    with open(filename, 'w') as file:
+        data = csv.writer(file)
+        data.writerows(myData)
+
+def findBy(index):
+    ''' (int) ->
+        'index' determines whether to search the csv file by title, author, or status.
+            0 - By title
+            1 - By author
+            2 - By status
+    '''
+
+    key = "myKey"
+    if index == 0:
+        key = input("Book Title: ")
+    elif index == 1:
+        key = input("Author: ")
+    elif index == 2:
+        key = input("Book Status: ")
+    else:
+        print("ERRORRRRRR!")
+    print("************************************************************************************")
 
     count = 0
     with open(filename) as file:
         data = csv.reader(file)
         for row in data:
+            if count == 0 or row[index] == key:
+                print('{:<45} {:<25} {:<25}'.format(*row))
             if count == 1:
                 print("************************************************************************************")
-            print('{:<35} {:<25} {:<25}'.format(*row))
             count = count + 1
-    print("************************************************************************************")
 
-def updateBookShelf():
+def newStatus():
     '''
         Collect and store existing book title and its new status from the user.
         Search csv file using the book title and store all book info in 'myRow'.
@@ -123,22 +166,18 @@ def updateBookShelf():
         data = csv.writer(file)
         data.writerows(myData)
 
-def removeBook():
+def listAllBooks():
     '''
-        Collect and store book title from user. Find and remove book from
-        csv file.        
+        Read all books from csv file and print to terminal row by row
+        with formatting.
     '''
 
-    title = input("Book Title: ")
-    myData = []
-    
+    count = 0
     with open(filename) as file:
         data = csv.reader(file)
         for row in data:
-            myData.append(row)
-            if row[0] == title:
-                myData.pop()
-
-    with open(filename, 'w') as file:
-        data = csv.writer(file)
-        data.writerows(myData)
+            if count == 1:
+                print("************************************************************************************")
+            print('{:<45} {:<25} {:<25}'.format(*row))
+            count = count + 1
+    print("************************************************************************************")
