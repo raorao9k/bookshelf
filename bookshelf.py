@@ -1,7 +1,7 @@
 '''
     File Name:  bookshelf.py
     Author:     Akshay Rao
-    Date:       December 24, 2021
+    Date:       January 1, 2022
     Modified:   None
     Copyright Akshay Rao 2021
 '''
@@ -221,3 +221,31 @@ def changeShelf():
     with open(filename, 'w') as file:
         data = csv.writer(file)
         data.writerows(myData)
+
+def updateBook(myBook):
+    ''' (list) -> (list)
+        Prompt the user to update any field in myBook, update it, and return the updated myBook.
+    '''
+
+    myNewBook = myBook
+    count = 0
+    myField = ""
+    myValue = ""    
+
+    myField = input("Which field to be changed? ")
+
+    count = 0
+    if myField.lower() == "all":
+        for field in myBook:
+            myNewBook[count] = input("{0}: ".format(headers[count]))
+            count = count + 1
+    else:
+        for field in headers:
+            if myField.lower() == headers[count].lower():
+                myValue = input("Enter new {0}: ".format(myField.lower()))
+                myNewBook[count] = myValue
+            count = count + 1
+
+    print("")            
+
+    return myNewBook
