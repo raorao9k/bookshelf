@@ -1,9 +1,9 @@
 '''
     File Name:  bookshelf.py
     Author:     Akshay Rao
-    Date:       January 1, 2022
+    Date:       August 28, 2022
     Modified:   None
-    Copyright Akshay Rao 2021
+    Copyright Akshay Rao 2022
 '''
 
 import csv
@@ -91,8 +91,9 @@ def userInterface():
         print("2 - Remove book\n")
         print("3 - Find book\n")
         print("4 - Move book to another shelf\n")
-        print("5 - List all series\n")
-        print("6 - Exit program\n\n")
+        print("5 - Update book\n")
+        print("6 - List all series\n")
+        print("7 - Exit program\n\n")
 
         option = input("What do? ")
         print("*****************************************************************************************************************************************************************************************************")
@@ -102,13 +103,15 @@ def userInterface():
         elif option == '2':
             removeBook()
         elif option == '3':
-            searchResults = searchFile()
+            searchResults = searchFile("")
             printBooks(searchResults)
         elif option == '4':
             changeShelf()
         elif option == '5':
-            printAllSeries()
+            updateBook()
         elif option == '6':
+            printAllSeries()
+        elif option == '7':
             break
         else:
             print("Invalid option. Select again.\n")
@@ -163,15 +166,21 @@ def removeBook():
         data = csv.writer(file)
         data.writerows(myData)
 
-def searchFile():
-    ''' (NoneType) -> list of [str]
+def searchFile(searchTerm):
+    ''' (str) -> list of [str]
+        Optional search term passed to function.
         Take user input for the search term. Search the csv file row by row for the keyword. If found, append the row as an item in myResults.
         Return myResults.
     '''
 
     count = 0
     myResults = []
-    myEntry = input("Search term: ")
+    myEntry = ""
+    
+    if searchTerm == "":
+        myEntry = input("Search term: ")
+    else:
+        myEntry = searchTerm
 
     print("*****************************************************************************************************************************************************************************************************")
 
@@ -222,30 +231,47 @@ def changeShelf():
         data = csv.writer(file)
         data.writerows(myData)
 
-def updateBook(myBook):
-    ''' (list) -> (list)
-        Prompt the user to update any field in myBook, update it, and return the updated myBook.
+def updateBook():
+    ''' (NoneType) -> NoneType
+        Search books using book title, ask user for which field to be changed.
+        Update the field in the books list.
     '''
 
-    myNewBook = myBook
+    myNewBook = entry
     count = 0
     myField = ""
-    myValue = ""    
+    myValue = ""
+    searchResults = []
+    myData = []
 
+    title = input("Book Title: ")
+    searchResults = searchFile(title)
+    printBooks(searchResults)
+    print("*****************************************************************************************************************************************************************************************************")
+
+    myNewBook = searchResults[0]
     myField = input("Which field to be changed? ")
+        
+    with open(filename) as file:
+        data = csv.reader(file)
+        for row in data:
+            if row[0] == title:
+                if myField.lower() == "all":
+                    for field in headers:
+                        myNewBook[count] = input("{0}: ".format(headers[count]))
+                        count = count + 1
+                else:
+                    for field in headers:
+                        if myField.lower() == headers[count].lower():
+                            myValue = input("Enter new {0}: ".format(myField.lower()))
+                            myNewBook[count] = myValue
+                        count = count + 1                
+                myData.append(myNewBook)
+            else:
+                myData.append(row)
 
-    count = 0
-    if myField.lower() == "all":
-        for field in myBook:
-            myNewBook[count] = input("{0}: ".format(headers[count]))
-            count = count + 1
-    else:
-        for field in headers:
-            if myField.lower() == headers[count].lower():
-                myValue = input("Enter new {0}: ".format(myField.lower()))
-                myNewBook[count] = myValue
-            count = count + 1
+    print("")        
 
-    print("")            
-
-    return myNewBook
+    with open(filename, 'w') as file:
+        data = csv.writer(file)
+        data.writerows(myData)
