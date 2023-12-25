@@ -1,9 +1,9 @@
 '''
     File Name:  bookshelf.py
     Author:     Akshay Rao
-    Date:       August 28, 2022
+    Date:       December 25, 2023
     Modified:   None
-    Copyright Akshay Rao 2022
+    Copyright Akshay Rao 2023
 '''
 
 import csv
@@ -69,7 +69,7 @@ def printAllSeries():
             data = csv.reader(file)
             for row in data:
                 if row[7] != '':
-                    print('{:<35} {:<45} {:<9} {:<13} {:<35}'.format(row[7],row[0],row[8],row[3],row[9]))
+                    print('{:<35} {:<45} {:<9} {:<13} {:<35}'.format(row[7][:34],row[0][:44],row[8][:8],row[3][:12],row[9][:34]))
                     if count == 1:
                         print("*****************************************************************************************************************************************************************************************************")
                         count = count + 1
@@ -85,7 +85,7 @@ def userInterface():
     option = '0'
     searchResults = []
 
-    while (option != '6'):
+    while (option != '7'):
         print("\n")
         print("1 - Add book\n")
         print("2 - Remove book\n")
@@ -202,7 +202,7 @@ def printBooks(myBooks):
     print('{:<50} {:<35} {:<15} {:<12} {:<30} {:<35}'.format(headers[0],headers[1],headers[2],headers[3],headers[7],headers[9]))    
     print("*****************************************************************************************************************************************************************************************************")
     for book in myBooks:
-        print('{:<50} {:<35} {:<15} {:<12} {:<30} {:<35}'.format(book[0],book[1],book[2],book[3],book[7],book[9]))
+        print('{:<50} {:<35} {:<15} {:<12} {:<30} {:<35}'.format(book[0][:49],book[1][:34],book[2][:14],book[3][:11],book[7][:29],book[9][:34]))
     
 def changeShelf():
     ''' (NoneType) -> NoneType
